@@ -3,16 +3,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import date
 
-newpath = '/media/wdrive/Daily_Absence/' + '2020-03-23' + '.xls'
+newpath = '/media/wdrive/Daily_Absence/' + '2020-03-24' + '.xls'
 df = pd.read_excel(newpath, skiprows=4)
 sd = pd.read_excel('/media/wdrive/Workforce Monthly Reports/Monthly_Reports/Feb-20 Snapshot/Staff Download/2020-02 - Staff Download - GGC.xls')
 phones = pd.read_excel('/media/wdrive/MFT/phone number lookup.xlsx')
+manager = pd.read_excel('/media/wdrive/Daily_Absence/manager_lookup.xlsx')
+manager = manager[['Pay_Number', 'Supervisor email address']]
 print(df.columns)
 print(sd.columns)
+print(manager.columns)
+
 
 df = df.rename(columns={'Pay No': 'Pay_Number'})
 df = df.merge(sd, on='Pay_Number')
 df = df.merge(phones, on="Pay_Number")
+df = df.merge(manager, on="Pay_Number")
 print(df.columns)
 
 print(df['AbsenceReason Description'].value_counts())
@@ -143,5 +148,5 @@ graph_maker_all(all_isolating_piv, "Special Leave SP - Coronavirus - Self Isolat
 graph_maker_all(all_parental_piv, "Special Leave SP - Coronavirus Parental Leave - All staff")
 graph_maker_all(all_positive_piv, "Special Leave SP - Coronavirus - Covid-19 Confirmed - All staff")
 
-df_isolating_sheet = all_isolating[['Pay_Number','Forename','Surname','Sector/Directorate/HSCP','Sub-Directorate 1','department','Job_Family','Absence Episode Start Date','Address_Line_1','Address_Line_2','Address_Line_3','Postcode', 'Best Phone']]
+df_isolating_sheet = all_isolating[['Pay_Number','Supervisor email address','Forename','Surname','Sector/Directorate/HSCP','Sub-Directorate 1','department','Job_Family','Absence Episode Start Date','Address_Line_1','Address_Line_2','Address_Line_3','Postcode', 'Best Phone']]
 df_isolating_sheet.to_excel('/media/wdrive/daily_absence/isolators-'+date.today().strftime('%Y-%m-%d')+'.xlsx', index=False)
