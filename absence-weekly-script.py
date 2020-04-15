@@ -6,12 +6,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import configparser
 from selenium.webdriver import ActionChains
+from dateutil.relativedelta import *
 import datetime
 import os
 import shutil
 import time
 import pandas as pd
-
+weekNumber = int(input("How many weeks of data do you want?"))
 config = configparser.ConfigParser()
 config.read('W:/Python/Danny/SSTS Extract/SSTSconf.ini')
 fp = webdriver.FirefoxProfile()
@@ -81,7 +82,7 @@ def sickabs():
         ec.element_to_be_clickable((By.ID, 'PV1')))
     start = driver.find_element_by_id('PV1')
     start.clear()
-    start.send_keys(yesterday.strftime('%d/%m/%Y') + " 00:00:00")
+    start.send_keys((yesterday - relativedelta(weeks=weekNumber)).strftime('%d/%m/%Y') + " 00:00:00")
     WebDriverWait(driver, 10).until(
         ec.element_to_be_clickable((By.ID, '_CWpromptstrLstElt1')))
     driver.find_element_by_id('_CWpromptstrLstElt1').click()

@@ -13,16 +13,16 @@ import time
 import pandas as pd
 
 config = configparser.ConfigParser()
-config.read('/home/danny/creds.ini')
+config.read('W:/Python/Danny/SSTS Extract/SSTSconf.ini')
 date1 = pd.to_datetime(input("Start date - format = dd/mm/yy"), dayfirst=True)
 date2 = pd.to_datetime(input("End date - format = dd/mm/yy"), dayfirst=True)
 print(date1)
 print(date2)
 fp = webdriver.FirefoxProfile()
 fp.set_preference("browser.download.folderList", 2)
-fp.set_preference("browser.download.dir", '/media/wdrive/Coronavirus Daily Absence/MICROSTRATEGY/')
+fp.set_preference("browser.download.dir", r"W:\Coronavirus Daily Absence\MICROSTRATEGY\\")
 fp.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/vnd.ms-excel")
-driver = webdriver.Firefox(executable_path='/home/danny/workspace/geckodriver', firefox_profile=fp)
+driver = webdriver.Firefox(executable_path='W:/MFT/geckodriver', firefox_profile=fp)
 driver.get("https://bo-wf.scot.nhs.uk/InfoViewApp/logon.jsp")
 
 
@@ -40,8 +40,8 @@ def login():
     username_field = driver.find_element_by_id(username_id)
     password_field = driver.find_element_by_id(password_id)
 
-    password_field.send_keys(config.get('SSTS', 'password'))
-    username_field.send_keys(config.get('SSTS', 'username'))
+    password_field.send_keys(config.get('SSTS', 'pword'))
+    username_field.send_keys(config.get('SSTS', 'uname'))
 
     driver.find_element_by_xpath(button_xpath).click()
 
@@ -88,7 +88,7 @@ def get_to_report_2():
     WebDriverWait(driver, 90).until(
         ec.element_to_be_clickable((By.ID,manager_button)))
     driver.find_element_by_id(manager_button).click()
-
+    time.sleep(3)
     chain = ActionChains(driver)
     chain.double_click(driver.find_element_by_id(report_selector)).perform()
 
@@ -161,7 +161,7 @@ def get_data():
         while not os.path.exists('/home/danny/Downloads/6a. Staff Record Leave - You Choose Type(s) - All Locations.xls'):
             time.sleep(1)
     counter=0
-    while not os.path.exists('/media/wdrive/Coronavirus Daily Absence/MICROSTRATEGY/0 Daily Absence - Absence Data _ 40661676.xls'):
+    while not os.path.exists('W:/Coronavirus Daily Absence/MICROSTRATEGY/0 Daily Absence - Absence Data _ 40661676.xls'):
         counter = counter+10
         time.sleep(10)
         print("Waiting for file - "+str(counter)+" seconds")
@@ -197,7 +197,7 @@ def get_data_2():
         while not os.path.exists('/home/danny/Downloads/6a. Staff Record Leave - You Choose Type(s) - All Locations.xls'):
             time.sleep(1)
     counter=0
-    while not os.path.exists('/media/wdrive/Coronavirus Daily Absence/MICROSTRATEGY/0 Daily Absence - Shift Checker - Everyone _ 40661694.xls'):
+    while not os.path.exists('W:/Coronavirus Daily Absence/MICROSTRATEGY/0 Daily Absence - Shift Checker - Everyone _ 40661694.xls'):
         counter = counter+10
         time.sleep(10)
         print("Waiting for file - "+str(counter)+" seconds")
@@ -234,20 +234,20 @@ def transform_data():
 
 
 login()
-while True:
-    try:
-        get_to_report()
-        sickabs()
-
-        get_data()
-        time.sleep(10)
-        #transform_data()
-        break
-    except ElementClickInterceptedException:
-        print('Broken, retrying')
-        time.sleep(10)
-        driver.get('https://bo-wf.scot.nhs.uk/InfoViewApp/listing/main.do')
-driver.get('https://bo-wf.scot.nhs.uk/InfoViewApp/listing/main.do')
+# while True:
+#     try:
+#         get_to_report()
+#         sickabs()
+#
+#         get_data()
+#         time.sleep(10)
+#         #transform_data()
+#         break
+#     except ElementClickInterceptedException:
+#         print('Broken, retrying')
+#         time.sleep(10)
+#         driver.get('https://bo-wf.scot.nhs.uk/InfoViewApp/listing/main.do')
+#driver.get('https://bo-wf.scot.nhs.uk/InfoViewApp/listing/main.do')
 while True:
     try:
         get_to_report_2()
