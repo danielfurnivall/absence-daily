@@ -29,7 +29,7 @@ df_nursedocs = df[(df['Job_Family'] == 'Nursing and Midwifery') | (df['Job_Famil
 
 west_dun = df[df['Sector/Directorate/HSCP'] == 'West Dunbartonshire HSCP']
 west_dun_piv = pd.pivot_table(west_dun, index=['Sub-Directorate 1', 'Sub-Directorate 2','AbsenceReason Description',
-                                               'department'], values=['WTE','Pay_Number'],
+                                               'department', 'Post_Descriptor'], values=['WTE','Pay_Number'],
                               aggfunc={'WTE':np.sum, 'Pay_Number':'count'}).round(1)
 west_dun_piv.reset_index(inplace=True)
 print(west_dun_piv.columns)
