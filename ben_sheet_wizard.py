@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import date
 import numpy as np
+from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
 import os
 
@@ -128,6 +129,7 @@ pivot(file)
 os.remove(abs_file)
 os.remove(shift_file)
 os.remove(file)
+messagebox.showwarning("File complete", "File is complete - let the relevant person know.")
 #
 # test(abs_file)
 
