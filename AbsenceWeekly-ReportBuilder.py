@@ -18,6 +18,8 @@ df = df.merge(sd, on='Pay_Number', how='left')
 print(len(df))
 print(df.columns)
 
+
+
 df = df[df['AbsenceReason Description'].isin(['Coronavirus',
                                            'Infectious diseases',
                                            'Coronavirus – Covid 19 Positive',

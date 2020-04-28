@@ -85,7 +85,7 @@ def merger(absence_file, shiftcheck_file):
 def pivot(file):
     df = pd.read_csv(file)
     print(df.columns)
-    df_piv = pd.pivot_table(df, index=['Shift Start Date  & Time','Area','department','Job_Family','Sub_Job_Family',
+    df_piv = pd.pivot_table(df, index=['Shift Start Date  & Time','Sector/Directorate/HSCP','department','Job_Family','Sub_Job_Family',  #added sec/dir/hscp and removed area
                                        'Band Group','Absence Type','AbsenceReason Description'],
                             values=['Basic Hours (Standard)        ','Excess Part-time Hours','Overtime T1/2',
                                     'Hours Lost'], aggfunc=np.sum)
@@ -100,11 +100,12 @@ def pivot(file):
                                    'Excess Part-time Hours':'Sum of Excess Part-time Hours',
                                    'Overtime T1/2':'Sum of Overtime T1/2','Hours Lost':'Sum of Hrs Lost'})
 
-    df_piv = df_piv[['Rounded Date','Area','department','Job Family','Sub Family','Band Group', 'Absence_Reason',
+    df_piv = df_piv[['Rounded Date','Sector/Directorate/HSCP','department','Job Family','Sub Family','Band Group', 'Absence_Reason',  #added sec/dir/hscp and removed area
                      'Abs_Desc','Sum of Basic Hours (Standard)        ','Sum of Excess Part-time Hours',
                      'Sum of Overtime T1/2','Sum of Hrs Lost','Bank Hours','Agency Hours']]
     df_piv['department'].replace({'<blank>':'Other GGC Sites'}, inplace=True)
     df_piv.replace({'<blank>':''}, inplace=True)
+    df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP':'Area'})  #rename area
     df_piv.to_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/pivot - '+str(date.today())+'.xlsx', index=False)
 
 def test(filename):
