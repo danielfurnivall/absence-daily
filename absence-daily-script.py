@@ -55,12 +55,12 @@ def get_to_report():
     boxi_iframe_switch()
     print("hello")
 
-    manager_button = 'ListingURE_treeNode8_name'
+    manager_button = 'ListingURE_treeNode7_name'
     report_selector = 'ListingURE_listColumn_1_0_1'
     staff_record_leave_6a = 'ListingURE_listColumn_28_0_1'
     WebDriverWait(driver, 90).until(
         ec.element_to_be_clickable((By.ID,manager_button)))
-    driver.find_element_by_id(manager_button).click()
+    #driver.find_element_by_id(manager_button).click()
 
     chain = ActionChains(driver)
     chain.double_click(driver.find_element_by_id(report_selector)).perform()
