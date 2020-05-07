@@ -28,6 +28,8 @@ def concatenate_excel(filename, output):
 
     for i in df.sheet_names[1:]:
         df1 = pd.read_excel(filename, sheet_name=i)
+        print(df1.columns)
+        print(fin_df.columns)
         df1.columns = fin_df.columns
         fin_df = fin_df.append(df1)
         print(len(fin_df))
@@ -46,6 +48,8 @@ def concatenate_excel(filename, output):
         fin_df['Band Group'] = np.where(fin_df['Pay_Band'].isin(['1','2','3','4']), 'Non Registered',
                                         np.where(fin_df['Pay_Band'] == '', '', 'Registered')) #Added np.where - remove second np.where
         print(fin_df['Band Group'].value_counts())
+        if 'Overtime T2' in fin_df:
+            fin_df['Overtime T1/2'] = fin_df['Overtime T1/2'] + fin_df['Overtime T2'] #TODO check these lines work
         fin_df['Lookup_String'] = fin_df['Pay_Number'].astype(str)+fin_df['Shift Start Date  & Time'].astype(str)
     if output=='absence':
         print(fin_df.columns)
@@ -108,6 +112,35 @@ def pivot(file):
     df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP':'Area'})  #rename area
     df_piv.to_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/pivot - '+str(date.today())+'.xlsx', index=False)
 
+def pivot2(file):
+    df = pd.read_csv(file)
+    print(df.columns)
+    df_piv = pd.pivot_table(df, index=['Shift Start Date  & Time','Sector/Directorate/HSCP','department',
+                                       'Sub-Directorate 1','Sub-Directorate 2','Cost_Centre'
+                                       'Job_Family','Sub_Job_Family',  #added sec/dir/hscp and removed area
+                                       'Band Group','Absence Type','AbsenceReason Description'],
+                            values=['Basic Hours (Standard)        ','Excess Part-time Hours','Overtime T1/2',
+                                    'Hours Lost'], aggfunc=np.sum)
+    df_piv['Bank Hours'] = ''
+    df_piv['Agency Hours'] = ''
+    print(df_piv.columns)
+    df_piv.reset_index(inplace=True)
+    df_piv= df_piv.rename(columns={'Shift Start Date  & Time':'Rounded Date','Job_Family':'Job Family',
+                                   'Sub_Job_Family':'Sub Family','Absence Type':'Absence_Reason',
+                                   'AbsenceReason Description':'Abs_Desc',
+                                   'Basic Hours (Standard)        ':'Sum of Basic Hours (Standard)        ',
+                                   'Excess Part-time Hours':'Sum of Excess Part-time Hours',
+                                   'Overtime T1/2':'Sum of Overtime T1/2','Hours Lost':'Sum of Hrs Lost'})
+
+    df_piv = df_piv[['Rounded Date','Sector/Directorate/HSCP','department','Sub-Directorate 1','Sub-Directorate 2',
+                     'Cost_Centre','Job Family','Sub Family','Band Group', 'Absence_Reason',  #added sec/dir/hscp and removed area
+                     'Abs_Desc','Sum of Basic Hours (Standard)        ','Sum of Excess Part-time Hours',
+                     'Sum of Overtime T1/2','Sum of Hrs Lost','Bank Hours','Agency Hours']]
+    df_piv['department'].replace({'<blank>':'Other GGC Sites'}, inplace=True)
+    df_piv.replace({'<blank>':''}, inplace=True)
+    df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP':'Area'})  #rename area
+    df_piv.to_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/newpivot - '+str(date.today())+'.xlsx', index=False)
+
 def test(filename):
 
     df = pd.read_csv(filename)
@@ -127,6 +160,7 @@ shift_file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/appended-'+'shiftchecke
 merger(abs_file, shift_file)
 file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/Shift-Checker-Complete - '+str(date.today())+'.csv'
 pivot(file)
+pivot2(file)
 os.remove(abs_file)
 os.remove(shift_file)
 os.remove(file)
