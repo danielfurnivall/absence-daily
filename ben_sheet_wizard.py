@@ -116,7 +116,7 @@ def pivot2(file):
     df = pd.read_csv(file)
     print(df.columns)
     df_piv = pd.pivot_table(df, index=['Shift Start Date  & Time','Sector/Directorate/HSCP','department',
-                                       'Sub-Directorate 1','Sub-Directorate 2','Cost_Centre'
+                                       'Sub-Directorate 1','Sub-Directorate 2','Cost_Centre',
                                        'Job_Family','Sub_Job_Family',  #added sec/dir/hscp and removed area
                                        'Band Group','Absence Type','AbsenceReason Description'],
                             values=['Basic Hours (Standard)        ','Excess Part-time Hours','Overtime T1/2',
