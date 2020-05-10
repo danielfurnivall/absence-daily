@@ -1,3 +1,7 @@
+'''This file takes a single day's SSTS Absence 6a report output <automatically
+produced by the accompanying absence-daily-script.py>.
+ It produces several pivot tables then emails them to the relevant people as required.'''
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np

@@ -160,6 +160,7 @@ shift_file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/appended-'+'shiftchecke
 merger(abs_file, shift_file)
 file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/Shift-Checker-Complete - '+str(date.today())+'.csv'
 pivot(file)
+messagebox.showwarning("File complete", "First File is complete - let the relevant person know.")
 pivot2(file)
 os.remove(abs_file)
 os.remove(shift_file)
