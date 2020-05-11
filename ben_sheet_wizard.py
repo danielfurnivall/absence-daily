@@ -31,11 +31,12 @@ sd = pd.read_excel(staff_download)
 def concatenate_excel(filename, output):
     '''
     This function takes in either absence or shift checker data then opens the first sheet and concats the rest in.
-
     '''
-    df = pd.ExcelFile(filename)
 
+    # open the excelfile to get list of sheets within.
+    df = pd.ExcelFile(filename)
     print(df.sheet_names)
+
     # open first sheet as master df
     master = pd.read_excel(filename, skiprows=1)
     cols = master.columns
@@ -95,19 +96,19 @@ def merger(absence_file, shiftcheck_file):
     shiftchecker_data = shiftchecker_data.merge(
         absence_data[['Lookup_String', 'Absence Type', 'AbsenceReason Description', 'Hours Lost']], on='Lookup_String',
         how='left')
-    #build dictionary of cost centres and bases
+    # build dictionary of cost centres and bases
     ccbase = pd.read_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/CCBase.xlsx')
     ccbase = {row[0]: row[1] for row in ccbase.values}
     shiftchecker_data['department'] = shiftchecker_data['Cost_Centre'].map(ccbase)
 
-    #replace zeros with blanks
+    # replace zeros with blanks
     shiftchecker_data = shiftchecker_data.fillna(
         value={'Absence Type': '<blank>', 'AbsenceReason Description': '<blank>', 'Area': '<blank>',
                'Sector/Directorate/HSCP': '<blank>', 'Job_Family': '<blank>', 'Sub_Job_Family': '<blank>',
                'Sub-Directorate 1': '<blank>', 'Sub-Directorate 2': '<blank>', 'department': '<blank>',
                'Pay_Band': '<blank>', 'Cost_Centre': '<blank>'})
 
-    #publish merged file file
+    # publish merged file file
     shiftchecker_data.to_csv(
         'W:/Coronavirus Daily Absence/MICROSTRATEGY/Shift-Checker-Complete - ' + str(date.today()) + '.csv',
         index=False)
@@ -128,7 +129,7 @@ def pivot(file):
     df_piv['Bank Hours'] = ''
     df_piv['Agency Hours'] = ''
 
-    #prettify output
+    # prettify output
     df_piv.reset_index(inplace=True)
     df_piv = df_piv.rename(columns={'Shift Start Date  & Time': 'Rounded Date', 'Job_Family': 'Job Family',
                                     'Sub_Job_Family': 'Sub Family', 'Absence Type': 'Absence_Reason',
@@ -142,12 +143,12 @@ def pivot(file):
                      'Abs_Desc', 'Sum of Basic Hours (Standard)        ', 'Sum of Excess Part-time Hours',
                      'Sum of Overtime T1/2', 'Sum of Hrs Lost', 'Bank Hours', 'Agency Hours']]
 
-    #replace blank depts with other ggc sites
+    # replace blank depts with other ggc sites
     df_piv['department'].replace({'<blank>': 'Other GGC Sites'}, inplace=True)
     df_piv.replace({'<blank>': ''}, inplace=True)
     df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP': 'Area'})  # rename area
 
-    #publish final
+    # publish final
     df_piv.to_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/pivot - ' + str(date.today()) + '.xlsx', index=False)
 
 
@@ -184,7 +185,7 @@ def pivot2(file):
 
 
 def test(filename):
-    '''This is a test function that changes depending on what needs to be tested. You can safely ignore it.'''
+    """This is a test function that changes depending on what needs to be tested. You can safely ignore it."""
     df = pd.read_csv(filename)
     print(df.columns)
     print(df['Hours Lost'].value_counts(dropna=False))
@@ -194,25 +195,25 @@ def test(filename):
     df.drop_duplicates(keep='first', inplace=True)
     print(len(df))
 
-#input absence + shiftchecker files
+
+# input absence + shiftchecker files
 concatenate_excel(absence_data, 'absence')
 concatenate_excel(shift_checker, 'shiftchecker')
 
-#open and merge files
+# open and merge files
 abs_file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/appended-' + 'absence' + '-' + str(date.today()) + '.csv'
 shift_file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/appended-' + 'shiftchecker' + '-' + str(date.today()) + '.csv'
 merger(abs_file, shift_file)
 
-#pivot files
+# pivot files
 file = 'W:/Coronavirus Daily Absence/MICROSTRATEGY/Shift-Checker-Complete - ' + str(date.today()) + '.csv'
 pivot(file)
 messagebox.showwarning("File complete", "First File is complete - let the relevant person know.")
 pivot2(file)
 
-#after pivots are run, delete all the bits
+# after pivots are run, delete all the bits
 os.remove(abs_file)
 os.remove(shift_file)
 os.remove(file)
 messagebox.showwarning("File complete", "File is complete - let the relevant person know.")
-#
-# test(abs_file)
+
