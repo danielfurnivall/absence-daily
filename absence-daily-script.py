@@ -153,7 +153,7 @@ while True:
         sickabs()
         get_data()
         #transform_data()
-        break
+        exit()
     except ElementClickInterceptedException:
         print('Broken, retrying')
         time.sleep(10)

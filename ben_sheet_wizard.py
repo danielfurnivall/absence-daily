@@ -215,5 +215,5 @@ pivot2(file)
 os.remove(abs_file)
 os.remove(shift_file)
 os.remove(file)
-messagebox.showwarning("File complete", "File is complete - let the relevant person know.")
+messagebox.showwarning("New File complete", "File is complete - let the relevant person know.")
 
