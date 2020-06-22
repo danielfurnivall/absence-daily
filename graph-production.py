@@ -160,14 +160,29 @@ nursedocs_household_piv = pd.pivot_table(nursedocs_household, values='Pay_Number
                                          columns='Job_Family',
                                          aggfunc='count',
                                          fill_value=0)
-print(nursedocs_underlying_piv)
-exit()
+
+
+dirs = df['Sector/Directorate/HSCP'].unique().tolist()
+dirs = [dir for dir in dirs if str(dir) != "nan"]
+
+
+
+
+print(all_underlying_piv)
+
 
 
 # print(self_isolating_piv)
 
 
 def graph_maker_all(data, graph_title):
+
+    for i in dirs:
+        if i in data.index:
+            pass
+        else:
+            data.loc[i] = [0]
+    data.sort_index(inplace=True)
     plt.style.use('seaborn')
     ax = data.plot(kind='bar', color='#003087', legend=False)
     plt.xticks(fontsize=7)
@@ -231,11 +246,11 @@ def autolabel(ax, rects, xpos='center'):
 
 
 all_underlying.to_excel('W:/Daily_Absence/underlying' + (date.today()).strftime('%Y-%m-%d') + '.xlsx')
-graph_maker_docs_and_nurses(nursedocs_household_piv,
-                            "Special Leave SP - Coronavirus – Household Related – Self Isolating - Clinical")
-graph_maker_docs_and_nurses(self_isolating_piv,
-                            "Special Leave SP - Coronavirus – Self displaying symptoms – Self Isolating - Clinical")
-graph_maker_docs_and_nurses(covid_parental_piv, "Special Leave SP - Coronavirus Parental Leave - Clinical")
+# graph_maker_docs_and_nurses(nursedocs_household_piv,
+#                             "Special Leave SP - Coronavirus – Household Related – Self Isolating - Clinical")
+# graph_maker_docs_and_nurses(self_isolating_piv,
+#                             "Special Leave SP - Coronavirus – Self displaying symptoms – Self Isolating - Clinical")
+# graph_maker_docs_and_nurses(covid_parental_piv, "Special Leave SP - Coronavirus Parental Leave - Clinical")
 
 graph_maker_all(all_isolating_piv,
                 "Special Leave SP - Coronavirus – Self displaying symptoms – Self Isolating - All Staff")
@@ -264,8 +279,9 @@ print("Underlying Conditions - " + str(len(all_underlying)))
 print("Covid Parental Leave - " + str(len(all_parental)))
 print("Household isolating - " + str(len(all_household_isolating)))
 print("Covid Positive - " + str(len(all_positive)))
-print("Covid - Test and protect - "+str(len(tpi_piv)))
+print("Covid - Test and protect - "+str(len(all_tpi)))
 graph_maker_all(tpi_piv, "Special Leave SP - Coronavirus – Test and Protect Isolation")
-graph_maker_docs_and_nurses(nursedocs_underlying_piv,
-                            "Special Leave SP - Coronavirus – Underlying Health Condition - Clinical")
-graph_maker_docs_and_nurses(covid_pos_piv, "Special Leave SP - Coronavirus - Covid-19 Confirmed - Clinical")
+tpi_piv.to_csv('C:/Learnpro_extracts/tpi.csv')
+# graph_maker_docs_and_nurses(nursedocs_underlying_piv,
+#                             "Special Leave SP - Coronavirus – Underlying Health Condition - Clinical")
+# graph_maker_docs_and_nurses(covid_pos_piv, "Special Leave SP - Coronavirus - Covid-19 Confirmed - Clinical")
