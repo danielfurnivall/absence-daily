@@ -10,7 +10,7 @@ from datetime import date
 newpath = 'W:/Daily_Absence/' + (date.today()).strftime("%Y-%m-%d") + '.xls'
 df = pd.read_excel(newpath, skiprows=4)
 sd = pd.read_excel(
-    'W:/Workforce Monthly Reports/Monthly_Reports/Mar-20 Snapshot/Staff Download/2020-03 - Staff Download - GGC.xls')
+    'W:/Workforce Monthly Reports/Monthly_Reports/Jul-20 Snapshot/Staff Download/2020-07 - Staff Download - GGC.xls')
 phones = pd.read_excel('W:/MFT/phone number lookup.xlsx')
 manager = pd.read_excel('W:/Daily_Absence/manager_lookup.xlsx')
 manager = manager[['Pay_Number', 'Supervisor email address', 'Work Email Address']]
@@ -246,6 +246,7 @@ def autolabel(ax, rects, xpos='center'):
 
 
 all_underlying.to_excel('W:/Daily_Absence/underlying' + (date.today()).strftime('%Y-%m-%d') + '.xlsx')
+all_parental.to_excel('W:/Daily_Absence/parental' + (date.today()).strftime('%Y-%m-%d') + '.xlsx')
 # graph_maker_docs_and_nurses(nursedocs_household_piv,
 #                             "Special Leave SP - Coronavirus – Household Related – Self Isolating - Clinical")
 # graph_maker_docs_and_nurses(self_isolating_piv,
