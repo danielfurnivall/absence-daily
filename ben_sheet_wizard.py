@@ -27,6 +27,11 @@ staff_download = askopenfilename(initialdir='//ntserver5/generalDB/WorkforceDB/S
                                  )
 sd = pd.read_excel(staff_download)
 
+subdir1map = dict(zip(sd['department'], sd['Sub-Directorate 1']))
+print(subdir1map)
+sd['Sector/Directorate/HSCP'].loc[sd['Sector/Directorate/HSCP'] == "Women & Children's"] ="W&C: "+sd['department'].map(subdir1map)
+
+
 
 def concatenate_excel(filename, output):
     '''
@@ -143,10 +148,14 @@ def pivot(file):
                      'Abs_Desc', 'Sum of Basic Hours (Standard)        ', 'Sum of Excess Part-time Hours',
                      'Sum of Overtime T1/2', 'Sum of Hrs Lost', 'Bank Hours', 'Agency Hours']]
 
+
+
+
     # replace blank depts with other ggc sites
     df_piv['department'].replace({'<blank>': 'Other GGC Sites'}, inplace=True)
     df_piv.replace({'<blank>': ''}, inplace=True)
     df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP': 'Area'})  # rename area
+
 
     # publish final
     df_piv.to_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/pivot - ' + str(date.today()) + '.xlsx', index=False)

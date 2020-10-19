@@ -15,7 +15,7 @@ master = pd.DataFrame()
 covid_codes = ['Coronavirus', 'Coronavirus – Household Related – Self Isolating',
                'Coronavirus – Self displaying symptoms – Self Isolating',
                'Coronavirus – Underlying Health Condition',
-               'Coronavirus – Covid 19 Positive']
+               'Coronavirus – Covid 19 Positive', 'Coronavirus – Test and Protect Isolation', 'Coronavirus – Quarantine']
 
 
 def grab_data(df):

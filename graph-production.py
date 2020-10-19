@@ -10,9 +10,9 @@ from datetime import date
 newpath = 'W:/Daily_Absence/' + (date.today()).strftime("%Y-%m-%d") + '.xls'
 df = pd.read_excel(newpath, skiprows=4)
 sd = pd.read_excel(
-    'W:/Workforce Monthly Reports/Monthly_Reports/Jul-20 Snapshot/Staff Download/2020-07 - Staff Download - GGC.xls')
+    'W:/Workforce Monthly Reports/Monthly_Reports/Sep-20 Snapshot/Staff Download/2020-09 - Staff Download - GGC.xls')
 phones = pd.read_excel('W:/MFT/phone number lookup.xlsx')
-manager = pd.read_excel('W:/Daily_Absence/manager_lookup.xlsx')
+manager = pd.read_excel('W:/Daily_Absence/eESS-emails.xlsx')
 manager = manager[['Pay_Number', 'Supervisor email address', 'Work Email Address']]
 print(df.columns)
 print(sd.columns)
@@ -27,6 +27,9 @@ df = df.merge(manager, on="Pay_Number", how='left')
 print(df.columns)
 
 print(df['AbsenceReason Description'].value_counts())
+
+quarantine_new = df[df['AbsenceReason Description'] == 'Coronavirus – Quarantine']
+
 
 all_tpi = df[df['AbsenceReason Description'] == 'Coronavirus – Test and Protect Isolation']
 tpi_piv = pd.pivot_table(all_tpi, values='Pay_Number',
@@ -126,6 +129,11 @@ self_isolating_piv = pd.pivot_table(self_isolating_nursedocs, values='Pay_Number
                                     aggfunc='count',
                                     fill_value=0)
 all_positive_piv = pd.pivot_table(all_positive, values='Pay_Number',
+                                  index='Sector/Directorate/HSCP',
+                                  aggfunc='count',
+                                  fill_value=0)
+
+quarantine_piv = pd.pivot_table(quarantine_new, values='Pay_Number',
                                   index='Sector/Directorate/HSCP',
                                   aggfunc='count',
                                   fill_value=0)
@@ -260,6 +268,7 @@ graph_maker_all(all_positive_piv, "Special Leave SP - Coronavirus - Covid-19 Con
 graph_maker_all(all_underlying_piv, "Special Leave SP - Coronavirus – Underlying Health Condition - All staff")
 graph_maker_all(all_household_isolating_piv,
                 "Special Leave SP - Coronavirus – Household Related – Self Isolating - All staff")
+graph_maker_all(quarantine_piv, "Special Leave SP - Coronavirus - Quarantine (new code)")
 df_isolating_sheet = all_isolators[['Pay_Number', 'Supervisor email address', 'Forename', 'Surname', 'Date_of_Birth',
                                     'AbsenceReason Description', 'Sector/Directorate/HSCP', 'Sub-Directorate 1',
                                     'department', 'Job_Family', 'Absence Episode Start Date', 'Address_Line_1',
@@ -281,6 +290,7 @@ print("Covid Parental Leave - " + str(len(all_parental)))
 print("Household isolating - " + str(len(all_household_isolating)))
 print("Covid Positive - " + str(len(all_positive)))
 print("Covid - Test and protect - "+str(len(all_tpi)))
+print(f'Quarantine (New code) = {len(quarantine_new)}')
 graph_maker_all(tpi_piv, "Special Leave SP - Coronavirus – Test and Protect Isolation")
 tpi_piv.to_csv('C:/Learnpro_extracts/tpi.csv')
 # graph_maker_docs_and_nurses(nursedocs_underlying_piv,
