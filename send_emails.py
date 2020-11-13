@@ -4,7 +4,7 @@ from exchangelib import Account, Configuration, Credentials, Mailbox, Message, F
 import configparser
 from datetime import date
 import time
-import os
+
 
 config = configparser.ConfigParser()
 config.read('C:/Tong/creds.ini')
@@ -25,10 +25,11 @@ def send_email(to_address, subject, body, attachments):
 
         to_recipients=[Mailbox(email_address=to_address)]
     )
+    #representing attachments as dictionaries with filenames as key + alias as value
     for i in attachments:
         with open(i, 'rb') as f:
-            binary_file_content = f.read()
-        m.attach(FileAttachment(name=attachments.get(i), content=binary_file_content))
+            file_content = f.read()
+        m.attach(FileAttachment(name=attachments.get(i), content=file_content))
         m.save()
     m.send_and_save()
 
@@ -65,9 +66,11 @@ for i in covid_team:
     time.sleep(2)
 
 # tracey, steven, nareen
-f = open('W:/daily_absence/raw_data' + date + '.txt', 'r')
 main_email_recipients = ['tracey.carrey@ggc.scot.nhs.uk', 'steven.munce@ggc.scot.nhs.uk', 'nareen.owens@ggc.scot.nhs.uk']
+# read the data file produced by fast_graphs.py
+f = open('W:/daily_absence/raw_data' + date + '.txt', 'r')
 body = f.read()
+
 for i in main_email_recipients:
     send_email(i, date, body,
            {'W:/daily_absence/positive-' + date + '.xlsx': 'positive' + date + '.xlsx',
