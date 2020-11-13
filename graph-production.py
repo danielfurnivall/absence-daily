@@ -18,6 +18,8 @@ print(df.columns)
 print(sd.columns)
 print(manager.columns)
 
+
+
 df = df.rename(columns={'Pay No': 'Pay_Number'})
 df['AbsenceReason Description'].replace({'Infectious diseases': 'Coronavirus – Covid 19 Positive'},
                                         inplace=True)
@@ -27,6 +29,33 @@ df = df.merge(manager, on="Pay_Number", how='left')
 print(df.columns)
 
 print(df['AbsenceReason Description'].value_counts())
+
+all_covid_reasons = ['Coronavirus – Household Related – Self Isolating', 'Coronavirus – Underlying Health Condition',
+                     'Coronavirus – Covid 19 Positive', 'Coronavirus',
+                     'Coronavirus – Self displaying symptoms – Self Isolating', 'Coronavirus – Quarantine',
+                     'Coronavirus – Test and Protect Isolation'
+                     ]
+
+all_covid_reasons = df[df['AbsenceReason Description'].isin(all_covid_reasons)]
+
+all_covid_reasons['Sector/Directorate/HSCP'].loc[all_covid_reasons['Sector/Directorate/HSCP'].isna()] = "New staff - no org structure"
+all_covid_reasons['Job_Family'].loc[all_covid_reasons['Sector/Directorate/HSCP'].isna()] = "New staff"
+all_covid_reasons.to_csv('W:/daily_absence/all_covid_names.csv')
+
+all_covid_piv = pd.pivot_table(all_covid_reasons, values='Pay_Number',
+                               index='Sector/Directorate/HSCP',
+                               aggfunc='count',
+                               fill_value=0,
+                               dropna=False)
+
+all_covid_piv_jobfam = pd.pivot_table(all_covid_reasons, values='Pay_Number',
+                               index='Sector/Directorate/HSCP',
+                               columns='Job_Family',
+                               aggfunc='count',
+                               fill_value=0,
+                                      dropna=False)
+all_covid_piv_jobfam.to_excel('W:/daily_absence/all_covid'+(date.today()).strftime('%Y-%m-%d')+'.xlsx')
+
 
 quarantine_new = df[df['AbsenceReason Description'] == 'Coronavirus – Quarantine']
 
@@ -277,6 +306,14 @@ df_isolating_sheet.to_excel('W:/daily_absence/isolators-' + (date.today()).strft
 df_isolating_south = df_isolating_sheet[df_isolating_sheet['Sector/Directorate/HSCP'] == 'South Sector']
 df_isolating_south.to_excel('W:/daily_absence/south-isolators-' + (date.today()).strftime('%Y-%m-%d') + '.xlsx',
                             index=False)
+graph_maker_all(all_covid_piv, "All Covid-related Absence Reasons")
+
+all_pos_ICData = all_positive[[
+    'Pay_Number','Forename','Surname','Date_of_Birth', 'Roster Location', 'department', 'Sector/Directorate/HSCP',
+    'Sub-Directorate 1', 'Sub-Directorate 2', 'Job_Family', 'AbsenceReason Description', 'Absence Episode Start Date'
+]]
+all_pos_ICData['Date_of_Birth'] = all_pos_ICData['Date_of_Birth'].dt.strftime('%d-%m-%Y')
+all_pos_ICData.to_excel('W:/daily_absence/ICData-' + (date.today()).strftime('%Y-%m-%d') + '.xlsx', index=False)
 all_pos_sheet = all_positive[
     ['Pay_Number', 'Supervisor email address', 'Forename', 'Surname', 'AbsenceReason Description',
      'Sector/Directorate/HSCP', 'Sub-Directorate 1', 'department', 'Job_Family',

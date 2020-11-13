@@ -154,6 +154,7 @@ def pivot(file):
     # replace blank depts with other ggc sites
     df_piv['department'].replace({'<blank>': 'Other GGC Sites'}, inplace=True)
     df_piv.replace({'<blank>': ''}, inplace=True)
+    df_piv['Sub Family'] = df_piv['Sub Family'].str.title()
     df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP': 'Area'})  # rename area
 
 
@@ -189,6 +190,7 @@ def pivot2(file):
                      'Sum of Overtime T1/2', 'Sum of Hrs Lost', 'Bank Hours', 'Agency Hours']]
     df_piv['department'].replace({'<blank>': 'Other GGC Sites'}, inplace=True)
     df_piv.replace({'<blank>': ''}, inplace=True)
+    df_piv['Sub Family'] = df_piv['Sub Family'].str.title()
     df_piv = df_piv.rename(columns={'Sector/Directorate/HSCP': 'Area'})  # rename area
     df_piv.to_excel('W:/Coronavirus Daily Absence/MICROSTRATEGY/newpivot - ' + str(date.today()) + '.xlsx', index=False)
 
