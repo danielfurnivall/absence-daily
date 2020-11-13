@@ -1,4 +1,4 @@
-'''The aim of this file is to send emails to several people with relevant data each day'''
+'''The aim of this file is to send covid-related emails to several people with relevant data each day'''
 
 from exchangelib import Account, Configuration, Credentials, Mailbox, Message, FileAttachment
 import configparser
@@ -48,11 +48,13 @@ send_email('morag.kinnear@ggc.scot.nhs.uk', date, '',
 
 time.sleep(2)
 
-# Gillian Ayling Whitehouse
-send_email('Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk', date, '',
-           {'W:/daily_absence/new_old_covid-' + date + '.xlsx': 'New_Old_Covid' + date + '.xlsx'})
+# Gillian Ayling Whitehouse & Steven
+recips = ['Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk', 'steven.munce@ggc.scot.nhs.uk']
+for i in recips
+    send_email(i, date, '',
+               {'W:/daily_absence/new_old_covid-' + date + '.xlsx': 'New_Old_Covid' + date + '.xlsx'})
 
-time.sleep(2)
+    time.sleep(2)
 
 # Covid_Absence_Team
 covid_team = ['Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk', 'Colin.McGowan@ggc.scot.nhs.uk',
