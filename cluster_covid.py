@@ -10,7 +10,7 @@ absence_data = askopenfilename(initialdir='//ntserver5/generalDB/WorkforceDB/Dai
 df = pd.read_excel(absence_data, skiprows=4)
 print(df.columns)
 sd = pd.read_excel(
-    'W:/Workforce Monthly Reports/Monthly_Reports/Sep-20 Snapshot/Staff Download/2020-09 - Staff Download - GGC.xls')
+    'W:/Workforce Monthly Reports/Monthly_Reports/Oct-20 Snapshot/Staff Download/2020-10 - Staff Download - GGC.xls')
 print(sd.columns)
 
 df = df.rename(columns={'Pay No': 'Pay_Number', 'Absence Episode Start Date':'AbsStart', 'Absence Episode End Date':'AbsEnd'})

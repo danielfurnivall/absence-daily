@@ -83,7 +83,7 @@ newpath = 'W:/Daily_Absence/' + (date.today()).strftime("%Y-%m-%d") + '.xls'
 # read in abs file and staff download
 df = pd.read_excel(newpath, skiprows=4)
 sd = pd.read_excel(
-    'W:/Workforce Monthly Reports/Monthly_Reports/Sep-20 Snapshot/Staff Download/2020-09 - Staff Download - GGC.xls')
+    'W:/Workforce Monthly Reports/Monthly_Reports/Nov-20 Snapshot/Staff Download/2020-11 - Staff Download - GGC.xls')
 # read in phone number lookup
 phones = pd.read_excel('W:/MFT/phone number lookup.xlsx')
 # read in eESS emails
@@ -233,10 +233,20 @@ df_abs = df[['Pay_Number', 'Forename', 'Surname', 'Roster Location', 'Absence Ty
          'Absence Episode End Date','Sector/Directorate/HSCP', 'Sub-Directorate 1', 'Sub-Directorate 2', 'department',
          'Base', 'Job_Family', 'Sub_Job_Family', 'Post_Descriptor']]
 df_abs = df_abs[df_abs['AbsenceReason Description'].isin(all_covid_reasons)]
+df_abs = df_abs.merge(manager, on='Pay_Number', how='left')
 df_abs['Forename'].loc[df_abs['Sector/Directorate/HSCP'].isna()] = "New staff - No payroll data yet"
 df_abs['Sector/Directorate/HSCP'].loc[df_abs['Sector/Directorate/HSCP'].isna()] = "New staff"
 df_abs['Sector/Directorate/HSCP'].loc[df_abs['Sector/Directorate/HSCP'] == 'East Dunbartonshire - Oral Health'] = 'East Dun Oral Health'
 df_abs['Sector/Directorate/HSCP'].loc[df_abs['Sector/Directorate/HSCP'] == "Women & Children's"] = "Women and Children's"
+df_abs['Booked Absence Days'] = (df_abs['Absence Episode End Date'] - df_abs['Absence Episode Start Date']).dt.days
+print(df_abs.columns)
+df_abs = df_abs[['Pay_Number', 'Forename', 'Surname', 'Roster Location', 'Absence Type',
+       'AbsenceReason Description', 'Booked Absence Days', 'Absence Episode Start Date',
+       'Absence Episode End Date', 'Sector/Directorate/HSCP',
+       'Sub-Directorate 1', 'Sub-Directorate 2', 'department', 'Base',
+       'Job_Family', 'Sub_Job_Family', 'Post_Descriptor',
+       'Supervisor email address', 'Work Email Address'
+       ]]
 with pd.ExcelWriter('W:/daily_absence/all_covid_absence-' + (pd.Timestamp.now()).strftime('%Y-%m-%d') + '.xlsx',
                     engine='xlsxwriter') as writer:
     workbook = writer.book

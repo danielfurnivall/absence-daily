@@ -4,7 +4,7 @@ from exchangelib import Account, Configuration, Credentials, Mailbox, Message, F
 import configparser
 from datetime import date
 import time
-
+import pandas as pd
 
 config = configparser.ConfigParser()
 config.read('C:/Tong/creds.ini')
@@ -37,21 +37,22 @@ def send_email(to_address, subject, body, attachments):
 date = date.today().strftime('%Y-%m-%d')
 
 # Gillian Gall
-send_email('gillian.gall2@ggc.scot.nhs.uk', date, '',
+send_email('gillian.gall2@ggc.scot.nhs.uk', date, 'This email was sent automatically - if there are any issues, please let me know with an email.',
            {'W:/Daily_Absence/West_Dun-' + date + '.csv': date + '.csv'})
 
 time.sleep(2)
 
 # Morag Kinnear
-send_email('morag.kinnear@ggc.scot.nhs.uk', date, '',
-           {'W:/daily_absence/positive-' + date + '.xlsx': 'positive' + date + '.xlsx'})
+for i in ['morag.kinnear@ggc.scot.nhs.uk', 'Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk']:
+    send_email(i, date, 'This email was sent automatically - if there are any issues, please let me know with an email.',
+               {'W:/daily_absence/positive-' + date + '.xlsx': 'positive' + date + '.xlsx'})
 
 time.sleep(2)
 
 # Gillian Ayling Whitehouse & Steven
 recips = ['Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk', 'steven.munce@ggc.scot.nhs.uk']
-for i in recips
-    send_email(i, date, '',
+for i in recips:
+    send_email(i, date, 'This email was sent automatically - if there are any issues, please let me know with an email.',
                {'W:/daily_absence/new_old_covid-' + date + '.xlsx': 'New_Old_Covid' + date + '.xlsx'})
 
     time.sleep(2)
@@ -61,14 +62,18 @@ covid_team = ['Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk', 'Colin.McGowan@ggc.sc
               'James.Farrelly@ggc.scot.nhs.uk', 'Tracy.Keenan2@ggc.scot.nhs.uk', 'Morag.Kinnear@ggc.scot.nhs.uk',
               'Karleen.Jackson@ggc.scot.nhs.uk', 'Alexsis.Boffey@ggc.scot.nhs.uk', 'David.Dall@ggc.scot.nhs.uk',
               'Joan.Smith@ggc.scot.nhs.uk', 'Stephen.Wallace@ggc.scot.nhs.uk', 'Steven.Munce@ggc.scot.nhs.uk',
-              'Ruth.Campbell@ggc.scot.nhs.uk']
+              'Ruth.Campbell@ggc.scot.nhs.uk', 'Margaret.Pirie@ggc.scot.nhs.uk', 'Margaret.Glen@ggc.scot.nhs.uk']
 for i in covid_team:
-    send_email(i, date, '',
+    send_email(i, date, 'This email was sent automatically - if there are any issues, please let me know with an email.'
+                        '\n\nNew field added (11/12/20) - "Booked Absence Days" - this allows you to look more closely at '
+                        'absences within the self-isolating and household isolating categories now the isolation period '
+                        'has been reduced to 10 days.',
            {'W:/daily_absence/all_covid_absence-' + date + '.xlsx': 'all_covid_absence' + date + '.xlsx'})
     time.sleep(2)
 
 # tracey, steven, nareen
-main_email_recipients = ['tracey.carrey@ggc.scot.nhs.uk', 'steven.munce@ggc.scot.nhs.uk', 'nareen.owens@ggc.scot.nhs.uk']
+main_email_recipients = ['tracey.carrey@ggc.scot.nhs.uk', 'steven.munce@ggc.scot.nhs.uk','lauren.kelly@ggc.scot.nhs.uk',
+                         'ian.macrae@ggc.scot.nhs.uk']
 # read the data file produced by fast_graphs.py
 f = open('W:/daily_absence/raw_data' + date + '.txt', 'r')
 body = f.read()
