@@ -65,6 +65,8 @@ covid_team = ['Gillian.Ayling-Whitehouse@ggc.scot.nhs.uk', 'Colin.McGowan@ggc.sc
               'Ruth.Campbell@ggc.scot.nhs.uk', 'Margaret.Pirie@ggc.scot.nhs.uk', 'Margaret.Glen@ggc.scot.nhs.uk']
 for i in covid_team:
     send_email(i, date, 'This email was sent automatically - if there are any issues, please let me know with an email.'
+                        '\n\nNew absence code "Long Covid added (26/12/20) - if this is not showing correctly, please '
+                        'let me know and I can amend accordingly.'
                         '\n\nNew field added (11/12/20) - "Booked Absence Days" - this allows you to look more closely at '
                         'absences within the self-isolating and household isolating categories now the isolation period '
                         'has been reduced to 10 days.',

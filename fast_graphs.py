@@ -93,7 +93,7 @@ manager = manager[['Pay_Number', 'Supervisor email address', 'Work Email Address
 all_covid_reasons = ['Coronavirus – Household Related – Self Isolating', 'Coronavirus – Underlying Health Condition',
                      'Coronavirus – Covid 19 Positive', 'Coronavirus',
                      'Coronavirus – Self displaying symptoms – Self Isolating', 'Coronavirus – Quarantine',
-                     'Coronavirus – Test and Protect Isolation'
+                     'Coronavirus – Test and Protect Isolation', 'Coronavirus – Long Covid'
                      ]
 
 
@@ -128,7 +128,8 @@ df_yesterday['AbsenceReason Description'] = df_yesterday['AbsenceReason Descript
          'Coronavirus – Underlying Health Condition': 'Underlying Health Condition',
          'Coronavirus – Household Related – Self Isolating': 'Household Isolating',
          'Coronavirus – Test and Protect Isolation': 'Test and protect',
-         'Coronavirus – Quarantine':'Quarantine'})
+         'Coronavirus – Quarantine':'Quarantine',
+         'Coronavirus – Long Covid': 'Long Covid'})
 df_today = df_today[['Pay_Number', 'Forename', 'Surname', 'Roster Location', 'Absence Type', 'AbsenceReason Description', 'Absence Episode Start Date',
          'Absence Episode End Date','Sector/Directorate/HSCP', 'Sub-Directorate 1', 'Sub-Directorate 2', 'department',
          'Base', 'Job_Family', 'Sub_Job_Family', 'Post_Descriptor']]
@@ -139,7 +140,8 @@ df_today['AbsenceReason Description'] = df_today['AbsenceReason Description'].ma
          'Coronavirus – Underlying Health Condition': 'Underlying Health Condition',
          'Coronavirus – Household Related – Self Isolating': 'Household Isolating',
          'Coronavirus – Test and Protect Isolation': 'Test and protect',
-         'Coronavirus – Quarantine':'Quarantine'})
+         'Coronavirus – Quarantine':'Quarantine',
+         'Coronavirus – Long Covid': 'Long Covid'})
 
 # Gillian Ayling-Whitehouse's daily absence file
 df_today1 = df_today[~(df_today['Pay_Number'].isin(df_yesterday['Pay_Number'].unique()))]
@@ -178,6 +180,7 @@ with pd.ExcelWriter('W:/daily_absence/new_old_covid-'+(pd.Timestamp.now()).strft
     worksheet.write(9, 0, f'Test & Protect', subheader)
     worksheet.write(10, 0, f'Quarantine', subheader)
     worksheet.write(11, 0, f'Parental/Carer Leave', subheader)
+    worksheet.write(12, 0, f'Long Covid', subheader)
     worksheet.write(4, 1, f'New Cases', subheader)
     worksheet.write(4, 2, f'Expiring Cases', subheader)
     worksheet.write(5, 1, len(df_today[df_today["AbsenceReason Description"]=="Covid Positive"]), table_format)
@@ -187,6 +190,8 @@ with pd.ExcelWriter('W:/daily_absence/new_old_covid-'+(pd.Timestamp.now()).strft
     worksheet.write(9, 1, len(df_today[df_today["AbsenceReason Description"] == "Test and Protect"]), table_format)
     worksheet.write(10, 1, len(df_today[df_today["AbsenceReason Description"] == "Quarantine"]), table_format)
     worksheet.write(11, 1, len(df_today[df_today["AbsenceReason Description"] == "Carer and Parental Leave"]), table_format)
+    worksheet.write(12, 1, len(df_today[df_today["AbsenceReason Description"] == "Coronavirus – Long Covid"]),
+                    table_format)
     worksheet.write(5, 2, len(df_yesterday[df_yesterday["AbsenceReason Description"] == "Covid Positive"]), table_format)
     worksheet.write(6, 2, len(df_yesterday[df_yesterday["AbsenceReason Description"] == "Underlying Health Condition"]),
                     table_format)
@@ -195,6 +200,8 @@ with pd.ExcelWriter('W:/daily_absence/new_old_covid-'+(pd.Timestamp.now()).strft
     worksheet.write(9, 2, len(df_yesterday[df_yesterday["AbsenceReason Description"] == "Test and Protect"]), table_format)
     worksheet.write(10, 2, len(df_yesterday[df_yesterday["AbsenceReason Description"] == "Quarantine"]), table_format)
     worksheet.write(11, 2, len(df_yesterday[df_yesterday["AbsenceReason Description"] == "Carer and Parental Leave"]),
+                    table_format)
+    worksheet.write(12, 2, len(df_yesterday[df_yesterday["AbsenceReason Description"] == 'Coronavirus – Long Covid']),
                     table_format)
 
     df_today.to_excel(writer, index=False, startrow=3, sheet_name = 'New')
@@ -279,6 +286,7 @@ with pd.ExcelWriter('W:/daily_absence/all_covid_absence-' + (pd.Timestamp.now())
     worksheet.write(3, 5, f'Test & Protect', subheader)
     worksheet.write(3, 6, f'Quarantine', subheader)
     worksheet.write(3, 7, f'Covid Parental/Carer Leave', subheader)
+    worksheet.write(3, 8, f'Long Covid', subheader)
 
     rownum = 4
     for i in df_abs['Sector/Directorate/HSCP'].unique():
@@ -297,6 +305,8 @@ with pd.ExcelWriter('W:/daily_absence/all_covid_absence-' + (pd.Timestamp.now())
                                               (df_abs['AbsenceReason Description'] == 'Coronavirus – Quarantine')]), table_format)
         worksheet.write(rownum, 7, len(df_abs[(df_abs['Sector/Directorate/HSCP'] == i) &
                                               (df_abs['AbsenceReason Description'] == 'Coronavirus')]), table_format)
+        worksheet.write(rownum, 8, len(df_abs[(df_abs['Sector/Directorate/HSCP'] == i) &
+                                              (df_abs['AbsenceReason Description'] == 'Coronavirus – Long Covid')]), table_format)
 
         rownum+=1
     df_abs['AbsenceReason Description'] = df_abs['AbsenceReason Description'].map(
@@ -306,7 +316,8 @@ with pd.ExcelWriter('W:/daily_absence/all_covid_absence-' + (pd.Timestamp.now())
          'Coronavirus – Underlying Health Condition': 'Underlying Health Condition',
          'Coronavirus – Household Related – Self Isolating': 'Household Isolating',
          'Coronavirus – Test and Protect Isolation': 'Test and protect',
-         'Coronavirus – Quarantine':'Quarantine'})
+         'Coronavirus – Quarantine':'Quarantine',
+         'Coronavirus – Long Covid': 'Long Covid'})
     for i in df_abs['Sector/Directorate/HSCP'].unique():
         print(i)
 
