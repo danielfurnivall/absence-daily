@@ -427,6 +427,8 @@ all_isolators = df[(df['AbsenceReason Description'] == 'Coronavirus – Self dis
                    (df['AbsenceReason Description'] == 'Coronavirus – Test and Protect Isolation')
                    ]
 
+all_long = df[df['AbsenceReason Description'] == 'Coronavirus – Long Covid']
+
 #build pivs to inform graphs
 all_positive_piv = pd.pivot_table(all_positive, values='Pay_Number',
                                   index='Sector/Directorate/HSCP',
@@ -504,6 +506,6 @@ with open('W:/daily_absence/raw_data'+ date.today().strftime('%Y-%m-%d') + '.txt
     print("Covid Positive - " + str(len(all_positive)))
     print("Covid - Test and protect - "+str(len(all_tpi)))
     print(f'Quarantine (New code) = {len(quarantine_new)}')
-
+    print(f'Long Covid = {len(all_long)}')
 graph_maker_all(tpi_piv, "Special Leave SP - Coronavirus – Test and Protect Isolation")
 
